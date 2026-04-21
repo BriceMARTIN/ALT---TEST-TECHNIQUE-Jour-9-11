@@ -25,7 +25,12 @@ const Header = () => {
 
   return (
     <header
-      className={`flex flex-col sm:flex-row justify-between p-2 sm:p-3 md:p-4 lg:p-5 ${theme === "dark" ? "bg-neutral-950" : "bg-white"}`}
+      className={`
+        flex flex-col sm:flex-row justify-between
+        p-2 sm:p-3 md:p-4 lg:p-5
+        ${theme === "dark" ? "bg-neutral-950" : "bg-white"}
+        border-b ${theme === "dark" ? "border-b-neutral-700" : "border-b-neutral-300"}
+      `}
     >
       <div className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-5">
         <>{/* TODO: Add logo */}</>
