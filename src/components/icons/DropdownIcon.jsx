@@ -1,7 +1,11 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
+import PropTypes from "prop-types";
 
-const DropdownIcon = () => {
+const DropdownIcon = ({
+  color = "",
+  classes = "w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7",
+}) => {
   const { theme } = useContext(ThemeContext);
 
   return (
@@ -11,9 +15,9 @@ const DropdownIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+      className={classes}
       style={{
-        color: theme === "dark" ? "#e5e7eb" : "#404040",
+        color: color ?? (theme === "dark" ? "#e5e7eb" : "#404040"),
       }}
     >
       <path
@@ -23,6 +27,11 @@ const DropdownIcon = () => {
       />
     </svg>
   );
+};
+
+DropdownIcon.propTypes = {
+  color: PropTypes.string,
+  classes: PropTypes.string,
 };
 
 export default DropdownIcon;

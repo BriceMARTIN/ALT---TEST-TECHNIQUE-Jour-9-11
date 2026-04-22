@@ -8,7 +8,7 @@ const UsersIcon = () => {
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5"
+      className="w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-5 lg:h-5"
       color="white"
     >
       <path

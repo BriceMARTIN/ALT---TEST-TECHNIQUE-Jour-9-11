@@ -6,6 +6,7 @@ import TrendIcon from "../components/icons/TrendIcon";
 import ToolIcon from "../components/icons/ToolIcon";
 import DepartmentIcon from "../components/icons/DepartmentIcon";
 import UsersIcon from "../components/icons/UsersIcon";
+import ToolsTable from "../components/ToolsTable";
 
 const Dashboard = () => {
   const { theme } = useContext(ThemeContext);
@@ -13,9 +14,76 @@ const Dashboard = () => {
 
   const grayTextColor =
     theme === "dark" ? "text-neutral-400" : "text-neutral-500";
+  // Placeholder data for now
+  const tools = [
+    {
+      name: "Slack",
+      emoji: "💬",
+      department: "Communication",
+      users: 245,
+      monthlyCost: 2450,
+      status: "Active",
+    },
+    {
+      name: "Figma",
+      emoji: "🎨",
+      department: "Design",
+      users: 32,
+      monthlyCost: 480,
+      status: "Active",
+    },
+    {
+      name: "GitHub",
+      emoji: "⚡",
+      department: "Engineering",
+      users: 89,
+      monthlyCost: 890,
+      status: "Active",
+    },
+    {
+      name: "Notion",
+      emoji: "📋",
+      department: "Operations",
+      users: 156,
+      monthlyCost: 780,
+      status: "Expiring",
+    },
+    {
+      name: "Adobe CC",
+      emoji: "🎭",
+      department: "Marketing",
+      users: 12,
+      monthlyCost: 720,
+      status: "Unused",
+    },
+    {
+      name: "Zoom",
+      emoji: "📹",
+      department: "Communication",
+      users: 198,
+      monthlyCost: 1980,
+      status: "Active",
+    },
+    {
+      name: "Jira",
+      emoji: "🔧",
+      department: "Engineering",
+      users: 67,
+      monthlyCost: 670,
+      status: "Expiring",
+    },
+    {
+      name: "Salesforce",
+      emoji: "💼",
+      department: "Sales",
+      users: 45,
+      monthlyCost: 4500,
+      status: "Active",
+    },
+  ];
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <h1
         className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-3 ${theme === "dark" ? "text-white" : "text-black"}`}
       >
@@ -60,6 +128,7 @@ const Dashboard = () => {
           icon={<UsersIcon />}
         />
       </div>
+      <ToolsTable tools={tools} />
     </div>
   );
 };

@@ -41,7 +41,7 @@ const StatCard = ({
       `}
     >
       <div className="flex flex-row items-center">
-        <h3 className="text-[10px] sm:text-xs md:text-sm lg:text-md text-neutral-500">
+        <h3 className="text-xs sm:text-sm md:text-sm lg:text-md text-neutral-400">
           {title}
         </h3>
         {icon && (
@@ -50,12 +50,12 @@ const StatCard = ({
           </div>
         )}
       </div>
-      <h2 className="text-md sm:text-lg md:text-xl lg:text-2xl font-bold mt-3">
+      <h2 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-bold mt-3">
         {value}
       </h2>
       {evolution && (
         <p
-          className="inline-block text-[6px] sm:text-[8px] md:text-[10px] lg:text-xs mt-1 rounded-xl px-2 py-1 text-white"
+          className="inline-block text-[8px] sm:text-[10px] md:text-[10px] lg:text-xs mt-1 rounded-xl px-2 py-1 text-white"
           style={gradientStyle}
         >
           {evolution}
