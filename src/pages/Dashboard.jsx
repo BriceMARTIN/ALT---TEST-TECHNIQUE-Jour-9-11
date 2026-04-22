@@ -10,7 +10,7 @@ import ToolsTable from "../components/ToolsTable";
 
 const Dashboard = () => {
   const { theme } = useContext(ThemeContext);
-  const { searchQuery } = useContext(TabContext);
+  // const { searchQuery } = useContext(TabContext);
 
   const grayTextColor =
     theme === "dark" ? "text-neutral-400" : "text-neutral-500";

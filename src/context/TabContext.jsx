@@ -3,11 +3,14 @@ import React, { createContext, useState } from "react";
 const TabContext = createContext();
 
 const TabProvider = ({ children }) => {
+  // FIX: set activeTab on mount based on current page
   const [activeTab, setActiveTab] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <TabContext.Provider value={{ activeTab, setActiveTab, searchQuery, setSearchQuery }}>
+    <TabContext.Provider
+      value={{ activeTab, setActiveTab, searchQuery, setSearchQuery }}
+    >
       {children}
     </TabContext.Provider>
   );

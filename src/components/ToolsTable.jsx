@@ -3,11 +3,16 @@ import PropTypes from "prop-types";
 import { ThemeContext } from "../context/ThemeContext";
 import DropdownIcon from "./icons/DropdownIcon";
 import AscendingIcon from "./icons/AscendingIcon";
+import ToolDetailsModal from "./ToolDetailsModal";
 
-const ToolsTable = ({ tools }) => {
+const ToolsTable = ({ tools, withClickableDetails = false }) => {
   const { theme } = useContext(ThemeContext);
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  // Modal related data
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [currentTool, setCurrentTool] = useState(null);
 
   const sortedTools = useMemo(() => {
     let sortableTools = [...tools];
@@ -119,27 +124,40 @@ const ToolsTable = ({ tools }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-800">
+        <tbody className="divide-y divide-neutral-800">
           {sortedTools.map((tool, key) => (
             <tr
               key={key}
               className={`cursor-pointer transition-colors duration-200 ${theme === "dark" ? "hover:bg-neutral-800" : "hover:bg-neutral-200"}`}
+              onClick={
+                withClickableDetails
+                  ? () => {
+                      setCurrentTool(tool);
+                      setDetailsModalOpen(true);
+                    }
+                  : null
+              }
             >
               <td className="px-4 py-4 text-[10px] sm:text-xs md:text-sm lg:text-md">
                 {tool?.emoji && <span className="mr-3">{tool.emoji}</span>}
                 {tool.name}
               </td>
               <td className="px-4 py-4 text-neutral-400 text-[10px] sm:text-xs md:text-sm lg:text-md">
-                {tool.department}
+                {tool?.department ?? tool?.owner_department ?? ""}
               </td>
               <td className="px-4 py-4 text-neutral-400 text-[10px] sm:text-xs md:text-sm lg:text-md">
-                {tool.users}
+                {tool?.users ?? tool?.active_users_count ?? ""}
               </td>
               <td className="px-4 py-4 text-neutral-400 text-[10px] sm:text-xs md:text-sm lg:text-md">
-                €{tool.monthlyCost}
+                €
+                {tool?.monthlyCost
+                  ? tool.monthlyCost.toString()
+                  : tool?.monthly_cost
+                    ? tool.monthly_cost.toString()
+                    : ""}
               </td>
               <td className="text-white px-4 py-4 text-neutral-400 text-[10px] sm:text-xs md:text-sm lg:text-md">
-                {tool.status === "Active" ? (
+                {tool.status?.toLowerCase() === "active" ? (
                   <span
                     className="rounded-lg px-2 py-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
                     style={{
@@ -148,7 +166,7 @@ const ToolsTable = ({ tools }) => {
                   >
                     {tool.status}
                   </span>
-                ) : tool.status === "Expiring" ? (
+                ) : tool.status?.toLowerCase() === "expiring" ? (
                   <span
                     className="rounded-lg px-2 py-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
                     style={{
@@ -157,7 +175,7 @@ const ToolsTable = ({ tools }) => {
                   >
                     {tool.status}
                   </span>
-                ) : (
+                ) : tool.status?.toLowerCase() === "unused" ? (
                   <span
                     className="rounded-lg px-2 py-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
                     style={{
@@ -166,12 +184,21 @@ const ToolsTable = ({ tools }) => {
                   >
                     {tool.status}
                   </span>
+                ) : (
+                  ""
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <ToolDetailsModal
+        isOpen={detailsModalOpen}
+        onClose={() => {
+          setDetailsModalOpen(false);
+        }}
+        tool={currentTool}
+      />
     </div>
   );
 };
@@ -181,12 +208,17 @@ ToolsTable.propTypes = {
     PropTypes.shape({
       emoji: PropTypes.string,
       name: PropTypes.string.isRequired,
-      department: PropTypes.string.isRequired,
-      users: PropTypes.number.isRequired,
-      monthlyCost: PropTypes.number.isRequired,
-      status: PropTypes.oneOf(["Active", "Expiring", "Unused"]).isRequired,
+      // Two key names for some data types to be handled in both Tools and Dashboard; bound to change to only handle the API key names down the line
+      department: PropTypes.string,
+      owner_department: PropTypes.string,
+      users: PropTypes.number,
+      active_users_count: PropTypes.number,
+      monthlyCost: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      monthly_cost: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      status: PropTypes.oneOf(["Active", "Expiring", "Unused"]),
     }),
   ).isRequired,
+  withClickableDetails: PropTypes.bool.isRequired,
 };
 
 export default ToolsTable;
