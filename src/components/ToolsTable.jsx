@@ -4,31 +4,78 @@ import { ThemeContext } from "../context/ThemeContext";
 import DropdownIcon from "./icons/DropdownIcon";
 import AscendingIcon from "./icons/AscendingIcon";
 import ToolDetailsModal from "./ToolDetailsModal";
+import FilterDropdown from "./FilterDropdown";
 
 const ToolsTable = ({ tools, withClickableDetails = false }) => {
   const { theme } = useContext(ThemeContext);
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [departmentFilter, setDepartmentFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   // Modal related data
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [currentTool, setCurrentTool] = useState(null);
 
+  const departmentOptions = useMemo(
+    () => [
+      ...new Set(
+        tools
+          .map(
+            (t) =>
+              t?.department?.toLowerCase() ??
+              t?.owner_department?.toLowerCase(),
+          )
+          .filter((department) => !!department),
+      ),
+    ],
+    [tools],
+  );
+  const statusOptions = useMemo(
+    () => [
+      ...new Set(
+        tools.map((t) => t?.status?.toLowerCase()).filter((status) => !!status),
+      ),
+    ],
+    [tools],
+  );
+
+  // Apply the filters first
+  const filteredTools = useMemo(() => {
+    return tools.filter((tool) => {
+      const dept = (
+        tool?.department ??
+        tool?.owner_department ??
+        ""
+      ).toLowerCase();
+      const status = (tool?.status ?? "").toLowerCase();
+      return (
+        (!departmentFilter || dept === departmentFilter) &&
+        (!statusFilter || status === statusFilter)
+      );
+    });
+  }, [tools, departmentFilter, statusFilter]);
+
+  // Sort the filtered tools
   const sortedTools = useMemo(() => {
-    let sortableTools = [...tools];
-    if (sortConfig.key) {
+    let sortableTools = [...filteredTools];
+    if (sortConfig.key || sortConfig.altKey) {
       sortableTools.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        if (
+          (a[sortConfig.key] ?? a[sortConfig.altKey]) <
+          (b[sortConfig.key] ?? b[sortConfig.altKey])
+        )
           return sortConfig.direction === "asc" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (
+          (a[sortConfig.key] ?? a[sortConfig.altKey]) >
+          (b[sortConfig.key] ?? b[sortConfig.altKey])
+        )
           return sortConfig.direction === "asc" ? 1 : -1;
-        }
         return 0;
       });
     }
     return sortableTools;
-  }, [tools, sortConfig]);
+  }, [filteredTools, sortConfig]);
 
   const colorMap = {
     activeGradient1: "#10b981",
@@ -59,7 +106,13 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
               Tool
             </th>
             <th className="w-1/4 px-4 py-4 text-[10px] sm:text-xs md:text-sm lg:text-md font-normal text-neutral-400">
-              Department
+              <FilterDropdown
+                label="Department"
+                options={departmentOptions}
+                value={departmentFilter}
+                onChange={setDepartmentFilter}
+                theme={theme}
+              />
             </th>
             <th
               className={`
@@ -70,6 +123,7 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
               onClick={() => {
                 setSortConfig((prev) => ({
                   key: "users",
+                  altKey: "active_users_count",
                   direction:
                     prev.key === "users" && prev.direction === "asc"
                       ? "desc"
@@ -99,6 +153,7 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
               onClick={() => {
                 setSortConfig((prev) => ({
                   key: "monthlyCost",
+                  altKey: "monthly_cost",
                   direction:
                     prev.key === "monthlyCost" && prev.direction === "asc"
                       ? "desc"
@@ -120,7 +175,13 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
               </div>
             </th>
             <th className="w-1/6 px-4 py-4 text-[10px] sm:text-xs md:text-sm lg:text-md font-normal text-neutral-400">
-              Status
+              <FilterDropdown
+                label="Status"
+                options={statusOptions}
+                value={statusFilter}
+                onChange={setStatusFilter}
+                theme={theme}
+              />
             </th>
           </tr>
         </thead>
