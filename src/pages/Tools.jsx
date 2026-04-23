@@ -3,12 +3,14 @@ import { ThemeContext } from "../context/ThemeContext";
 import { TabContext } from "../context/TabContext";
 import { fetchTools } from "../api/ToolsApi";
 import ToolsTable from "../components/ToolsTable";
+import { filterToolsByName } from "../utils";
 
 const Tools = () => {
   const { theme } = useContext(ThemeContext);
   const { searchQuery } = useContext(TabContext);
 
   const [tools, setTools] = useState([]);
+  const [filteredTools, setFilteredTools] = useState([]);
 
   useEffect(() => {
     const getTools = async () => {
@@ -23,8 +25,8 @@ const Tools = () => {
   }, []);
 
   useEffect(() => {
-    console.log(tools);
-  }, [tools]);
+    setFilteredTools(filterToolsByName(tools, searchQuery));
+  }, [tools, searchQuery]);
 
   const grayTextColor =
     theme === "dark" ? "text-neutral-400" : "text-neutral-500";
@@ -41,7 +43,7 @@ const Tools = () => {
       >
         Monitor and manage all the tools used by your organization
       </p>
-      <ToolsTable tools={tools} withClickableDetails />
+      <ToolsTable tools={filteredTools} withClickableDetails />
     </div>
   );
 };

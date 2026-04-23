@@ -3,8 +3,9 @@ import React, { createContext, useState } from "react";
 const TabContext = createContext();
 
 const TabProvider = ({ children }) => {
-  // FIX: set activeTab on mount based on current page
-  const [activeTab, setActiveTab] = useState("");
+  const [activeTab, setActiveTab] = useState(
+    window.location.pathname.substring(1),
+  );
   const [searchQuery, setSearchQuery] = useState("");
 
   return (

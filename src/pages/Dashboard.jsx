@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { TabContext } from "../context/TabContext";
 import StatCard from "../components/StatCard";
@@ -7,13 +7,12 @@ import ToolIcon from "../components/icons/ToolIcon";
 import DepartmentIcon from "../components/icons/DepartmentIcon";
 import UsersIcon from "../components/icons/UsersIcon";
 import ToolsTable from "../components/ToolsTable";
+import { filterToolsByName } from "../utils";
 
 const Dashboard = () => {
   const { theme } = useContext(ThemeContext);
-  // const { searchQuery } = useContext(TabContext);
+  const { searchQuery } = useContext(TabContext);
 
-  const grayTextColor =
-    theme === "dark" ? "text-neutral-400" : "text-neutral-500";
   // Placeholder data for now
   const tools = [
     {
@@ -81,6 +80,14 @@ const Dashboard = () => {
       status: "Active",
     },
   ];
+  const [filteredTools, setFilteredTools] = useState(tools);
+
+  const grayTextColor =
+    theme === "dark" ? "text-neutral-400" : "text-neutral-500";
+
+  useEffect(() => {
+    setFilteredTools(filterToolsByName(tools, searchQuery));
+  }, [searchQuery]);
 
   return (
     <div className="p-8">
@@ -128,7 +135,7 @@ const Dashboard = () => {
           icon={<UsersIcon />}
         />
       </div>
-      <ToolsTable tools={tools} />
+      <ToolsTable tools={filteredTools} />
     </div>
   );
 };

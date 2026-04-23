@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import { ThemeContext } from "./context/ThemeContext";
 import Tools from "./pages/Tools";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings"
 
 function App() {
   const { theme } = useContext(ThemeContext);
@@ -18,8 +20,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/tools" element={<Tools />} />
-          <Route path="/analytics" element={<></>} />
-          <Route path="/settings" element={<></>} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Router>
     </div>
