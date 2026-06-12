@@ -1,13 +1,64 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import CloseIcon from "./icons/CloseIcon";
 import { ThemeContext } from "../context/ThemeContext";
+import { updateTool } from "../api/ToolsApi";
 import dayjs from "dayjs";
 
-const ToolDetailsModal = ({ isOpen, onClose, tool }) => {
+const ToolDetailsModal = ({
+  isOpen,
+  onClose,
+  tool,
+  initialEditMode = false,
+}) => {
   const { theme } = useContext(ThemeContext);
+  const [isEditMode, setIsEditMode] = useState(initialEditMode);
+  const [editData, setEditData] = useState(tool || {});
+
+  useEffect(() => {
+    setIsEditMode(initialEditMode);
+  }, [initialEditMode]);
 
   if (!isOpen) return null;
+
+  const editableFields = [
+    "name",
+    "description",
+    "vendor",
+    "category",
+    "monthly_cost",
+    "website_url",
+    "status",
+    "owner_department",
+  ];
+
+  const handleClose = () => {
+    setIsEditMode(false);
+    setEditData(tool || {});
+    onClose();
+  };
+
+  const handleEditMode = () => {
+    setEditData(tool);
+    setIsEditMode(true);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateTool(tool.id, editData);
+      setIsEditMode(false);
+    } catch (error) {
+      console.error("Error updating tool:", error);
+    }
+  };
 
   const valueTitles = {
     id: "ID",
@@ -22,12 +73,11 @@ const ToolDetailsModal = ({ isOpen, onClose, tool }) => {
     website_url: "Website URL",
     active_users_count: "Users",
     created_at: "Created:",
-    updated_at: "Last updated:",
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="absolute inset-0" onClick={onClose} />
+      <div className="absolute inset-0" onClick={handleClose} />
       <div
         className={`
         relative
@@ -39,7 +89,7 @@ const ToolDetailsModal = ({ isOpen, onClose, tool }) => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Tool Details</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-400 hover:text-gray-600"
           >
             <CloseIcon />
@@ -48,17 +98,58 @@ const ToolDetailsModal = ({ isOpen, onClose, tool }) => {
         <table className="table-fixed w-full">
           <tbody className="divide-y divide-neutral-800">
             {Object.entries(valueTitles).map(([key, value]) =>
-              tool?.[key] ? (
-                <tr>
+              (isEditMode ? editData?.[key] : tool?.[key]) ? (
+                <tr key={key}>
                   <th className="px-4 py-2 text-left font-semibold w-32 text-[10px] sm:text-xs md:text-sm lg:text-md">
                     {value}
                   </th>
-                  <td className="px-4 py-2 text-neutral-400 text-[10px] sm:text-xs md:text-sm lg:text-md">
-                    {["created_at", "updated_at"].includes(key)
-                      ? dayjs(tool[key]).format("DD/MM/YYYY HH:mm")
-                      : ["monthly_cost", "previous_month_cost"].includes(key)
-                        ? `€${tool[key]}`
-                        : tool[key]}
+                  <td className="px-4 py-2 text-[10px] sm:text-xs md:text-sm lg:text-md">
+                    {isEditMode && editableFields.includes(key) ? (
+                      key === "status" ? (
+                        <select
+                          name={key}
+                          value={editData[key] || ""}
+                          onChange={handleChange}
+                          className={`w-full px-2 py-1 rounded-md border text-sm ${
+                            theme === "dark"
+                              ? "bg-neutral-900 border-neutral-700 text-white"
+                              : "bg-white border-neutral-300 text-black"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        >
+                          <option value="">Select status</option>
+                          <option value="active">Active</option>
+                          <option value="expiring">Expiring</option>
+                          <option value="unused">Unused</option>
+                        </select>
+                      ) : (
+                        <input
+                          type={
+                            key === "monthly_cost"
+                              ? "number"
+                              : key === "website_url"
+                                ? "url"
+                                : "text"
+                          }
+                          name={key}
+                          value={editData[key] || ""}
+                          onChange={handleChange}
+                          className={`w-full px-2 py-1 rounded-md border text-sm ${
+                            theme === "dark"
+                              ? "bg-neutral-900 border-neutral-700 text-white"
+                              : "bg-white border-neutral-300 text-black"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        />
+                      )
+                    ) : (
+                      <span className="text-neutral-400">
+                        {key === "created_at"
+                          ? dayjs(tool[key]).format("DD/MM/YYYY HH:mm")
+                          : key === "monthly_cost" ||
+                              key === "previous_month_cost"
+                            ? `€${tool[key]}`
+                            : tool[key]}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ) : (
@@ -67,6 +158,23 @@ const ToolDetailsModal = ({ isOpen, onClose, tool }) => {
             )}
           </tbody>
         </table>
+        <div className="mt-4">
+          {isEditMode ? (
+            <button
+              onClick={handleSave}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 font-medium"
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              onClick={handleEditMode}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 font-medium"
+            >
+              Edit
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -75,6 +183,7 @@ const ToolDetailsModal = ({ isOpen, onClose, tool }) => {
 ToolDetailsModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  initialEditMode: PropTypes.bool,
   tool: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
