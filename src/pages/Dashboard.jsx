@@ -2,10 +2,10 @@ import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { TabContext } from "../context/TabContext";
 import StatCard from "../components/StatCard";
-import TrendIcon from "../components/icons/TrendIcon";
-import ToolIcon from "../components/icons/ToolIcon";
-import DepartmentIcon from "../components/icons/DepartmentIcon";
-import UsersIcon from "../components/icons/UsersIcon";
+import ArrowTrendingUpIcon from "@heroicons/react/24/solid/ArrowTrendingUpIcon";
+import WrenchIcon from "@heroicons/react/24/solid/WrenchIcon";
+import BuildingOffice2Icon from "../components/icons/BuildingOffice2Icon";
+import UserGroupIcon from "@heroicons/react/24/solid/UserGroupIcon";
 import ToolsTable from "../components/ToolsTable";
 import { filterToolsByName } from "../utils";
 
@@ -108,7 +108,12 @@ const Dashboard = () => {
           evolution="+12%"
           gradientColor1="emerald-500"
           gradientColor2="teal-600"
-          icon={<TrendIcon />}
+          icon={
+            <ArrowTrendingUpIcon
+              className="w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-5 lg:h-5"
+              color="white"
+            />
+          }
         />
         <StatCard
           title="Active Tools"
@@ -116,7 +121,12 @@ const Dashboard = () => {
           evolution="+8"
           gradientColor1="indigo-500"
           gradientColor2="purple-600"
-          icon={<ToolIcon />}
+          icon={
+            <WrenchIcon
+              className="w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-5 lg:h-5"
+              color="white"
+            />
+          }
         />
         <StatCard
           title="Departments"
@@ -124,7 +134,12 @@ const Dashboard = () => {
           evolution="+2"
           gradientColor1="orange-500"
           gradientColor2="pink-600"
-          icon={<DepartmentIcon />}
+          icon={
+            <BuildingOffice2Icon
+              className="w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-5 lg:h-5"
+              color="white"
+            />
+          }
         />
         <StatCard
           title="Cost/User"
@@ -132,7 +147,12 @@ const Dashboard = () => {
           evolution="-€12"
           gradientColor1="pink-500"
           gradientColor2="rose-600"
-          icon={<UsersIcon />}
+          icon={
+            <UserGroupIcon
+              className="w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-5 lg:h-5"
+              color="white"
+            />
+          }
         />
       </div>
       <ToolsTable tools={filteredTools} />

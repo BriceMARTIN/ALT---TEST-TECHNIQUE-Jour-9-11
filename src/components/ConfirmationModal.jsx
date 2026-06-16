@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
-import CloseIcon from "./icons/CloseIcon";
+import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ThemeContext } from "../context/ThemeContext";
 
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
@@ -25,7 +25,10 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
           >
-            <CloseIcon />
+            <XMarkIcon
+              className="w-6 h-6 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-7 lg:h-7"
+              style={{ color: theme === "dark" ? "#e5e7eb" : "#404040" }}
+            />
           </button>
         </div>
         <p

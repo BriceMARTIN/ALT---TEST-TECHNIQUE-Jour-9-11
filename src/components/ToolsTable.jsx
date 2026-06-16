@@ -2,12 +2,12 @@ import React, { useState, useContext, useMemo } from "react";
 import PropTypes from "prop-types";
 import { ThemeContext } from "../context/ThemeContext";
 import { deleteTool } from "../api/ToolsApi";
-import DropdownIcon from "./icons/DropdownIcon";
-import AscendingIcon from "./icons/AscendingIcon";
+import ChevronUpIcon from "@heroicons/react/24/solid/ChevronUpIcon";
+import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
 import ToolDetailsModal from "./ToolDetailsModal";
 import AddToolModal from "./AddToolModal";
 import ConfirmationModal from "./ConfirmationModal";
-import PlusIcon from "./icons/PlusIcon";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import FilterDropdown from "./FilterDropdown";
 
 const ToolsTable = ({ tools, withClickableDetails = false }) => {
@@ -180,12 +180,9 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
                   Users
                   {sortConfig.key === "users" &&
                     (sortConfig.direction === "asc" ? (
-                      <AscendingIcon />
+                      <ChevronUpIcon className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-neutral-400" />
                     ) : (
-                      <DropdownIcon
-                        color="text-neutral-400"
-                        classes="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5"
-                      />
+                      <ChevronDownIcon className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-neutral-400" />
                     ))}
                 </div>
               </th>
@@ -210,12 +207,9 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
                   Monthly Cost
                   {sortConfig.key === "monthlyCost" &&
                     (sortConfig.direction === "asc" ? (
-                      <AscendingIcon />
+                      <ChevronUpIcon className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-neutral-400" />
                     ) : (
-                      <DropdownIcon
-                        color="text-neutral-400"
-                        classes="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5"
-                      />
+                      <ChevronDownIcon className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-neutral-400" />
                     ))}
                 </div>
               </th>

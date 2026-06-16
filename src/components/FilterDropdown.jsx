@@ -1,6 +1,6 @@
 // FilterDropdown.jsx
 import { useState, useRef, useEffect } from "react";
-import DropdownIcon from "./icons/DropdownIcon";
+import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
 
 const FilterDropdown = ({ label, options, value, onChange, theme }) => {
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ const FilterDropdown = ({ label, options, value, onChange, theme }) => {
         `}
       >
         {value || label}
-        <DropdownIcon classes="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+        <ChevronDownIcon className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
       </button>
 
       {open && (

@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { TabContext } from "../context/TabContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import ThemeIcon from "./icons/ThemeIcon";
-import NotificationsIcon from "./icons/NotificationsIcon";
-import SettingsIcon from "./icons/SettingsIcon";
-import DropdownIcon from "./icons/DropdownIcon";
-import SearchIcon from "./icons/SearchIcon";
+import SunIcon from "@heroicons/react/24/solid/SunIcon";
+import BellIcon from "@heroicons/react/24/solid/BellIcon";
+import Cog6ToothIcon from "@heroicons/react/24/solid/Cog6ToothIcon";
+import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
+import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 
 const Header = () => {
   const { activeTab, setActiveTab, searchQuery, setSearchQuery } =
@@ -66,7 +66,10 @@ const Header = () => {
       <div className="flex gap-1 sm:gap-2 md:gap-3 lg:gap-4">
         <div className="relative">
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <SearchIcon />
+            <MagnifyingGlassIcon
+              className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6"
+              style={{ color: theme === "dark" ? "#e5e7eb" : "#404040" }}
+            />
           </div>
           <input
             id="search-input"
@@ -93,13 +96,22 @@ const Header = () => {
             setTheme(theme === "dark" ? "light" : "dark");
           }}
         >
-          <ThemeIcon />
+          <SunIcon
+            className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+            style={{ color: theme === "dark" ? "#FFDF20" : "#404040" }}
+          />
         </button>
         <button>
-          <NotificationsIcon />
+          <BellIcon
+            className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+            style={{ color: theme === "dark" ? "#e5e7eb" : "#404040" }}
+          />
         </button>
         <button>
-          <SettingsIcon />
+          <Cog6ToothIcon
+            className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+            style={{ color: theme === "dark" ? "#e5e7eb" : "#404040" }}
+          />
         </button>
         <button className="flex flex-row items-center">
           {/* User avatar placeholder */}
@@ -108,7 +120,7 @@ const Header = () => {
             alt="User Avatar"
             className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
           />
-          <DropdownIcon />
+          <ChevronDownIcon />
         </button>
       </div>
     </header>
