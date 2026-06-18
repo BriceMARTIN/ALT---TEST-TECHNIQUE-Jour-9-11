@@ -5,24 +5,34 @@ import MonthlySpend from "../components/charts/MonthlySpend";
 import DepartmentCost from "../components/charts/DepartmentCost";
 import TopExpensiveTools from "../components/charts/TopExpensiveTools";
 import BudgetProgress from "../components/charts/BudgetProgress";
+import { CircleLoader } from "react-spinners";
+import ErrorMessage from "../components/ErrorMessage";
+import { toast } from "react-toastify";
 
 const Analytics = () => {
   const { theme } = useContext(ThemeContext);
 
   const [analytics, setAnalytics] = useState(null);
   const [activeTab, setActiveTab] = useState("Monthly Spend");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retry, setRetry] = useState(false);
 
   useEffect(() => {
     const getAnalytics = async () => {
       try {
         const data = await fetchAnalytics();
         setAnalytics(data);
+        setLoading(false);
+        setError(null); // Clear any previous errors on successful fetch
       } catch (error) {
-        console.error("Error fetching tools:", error);
+        toast.error("Error fetching analytics:", error.message);
+        setLoading(false);
+        setError(error.message);
       }
     };
     getAnalytics();
-  }, []);
+  }, [retry]);
 
   useEffect(() => {
     console.log(analytics);
@@ -32,6 +42,9 @@ const Analytics = () => {
     theme === "dark" ? "text-neutral-400" : "text-neutral-500";
 
   const renderChart = () => {
+    if (error) {
+      return <ErrorMessage message={error} setRetry={setRetry} />;
+    }
     if (!analytics) return null;
     switch (activeTab) {
       case "Monthly Spend":
@@ -86,6 +99,13 @@ const Analytics = () => {
           </button>
         ))}
       </div>
+      {loading && (
+        <CircleLoader
+          color={theme === "dark" ? "#e5e7eb" : "#404040"}
+          // Always true because the loading state is already managed by our logic
+          loading={true}
+        />
+      )}
       {renderChart()}
     </div>
   );

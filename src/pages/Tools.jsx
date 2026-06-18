@@ -4,6 +4,9 @@ import { TabContext } from "../context/TabContext";
 import { fetchTools } from "../api/ToolsApi";
 import ToolsTable from "../components/ToolsTable";
 import { filterToolsByName } from "../utils";
+import { CircleLoader } from "react-spinners";
+import ErrorMessage from "../components/ErrorMessage";
+import { toast } from "react-toastify";
 
 const Tools = () => {
   const { theme } = useContext(ThemeContext);
@@ -11,14 +14,21 @@ const Tools = () => {
 
   const [tools, setTools] = useState([]);
   const [filteredTools, setFilteredTools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retry, setRetry] = useState(false);
 
   useEffect(() => {
     const getTools = async () => {
       try {
         const data = await fetchTools();
         setTools(data);
+        setLoading(false);
+        setError(null); // Clear any previous errors on successful fetch
       } catch (error) {
-        console.error("Error fetching tools:", error);
+        toast.error("Error fetching tools:", error.message);
+        setLoading(false);
+        setError(error.message || "An error occurred while fetching tools.");
       }
     };
     getTools();
@@ -43,6 +53,14 @@ const Tools = () => {
       >
         Monitor and manage all the tools used by your organization
       </p>
+      {loading && (
+        <CircleLoader
+          color={theme === "dark" ? "#e5e7eb" : "#404040"}
+          // Always true because the loading state is already managed by our logic
+          loading={true}
+        />
+      )}
+      {error && <ErrorMessage message={error} setRetry={setRetry} />}
       <ToolsTable tools={filteredTools} withClickableDetails />
     </div>
   );

@@ -4,6 +4,7 @@ import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ThemeContext } from "../context/ThemeContext";
 import { updateTool } from "../api/ToolsApi";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 const ToolDetailsModal = ({
   isOpen,
@@ -56,7 +57,7 @@ const ToolDetailsModal = ({
       await updateTool(tool.id, editData);
       setIsEditMode(false);
     } catch (error) {
-      console.error("Error updating tool:", error);
+      toast.error("Error updating tool:", error.message);
     }
   };
 

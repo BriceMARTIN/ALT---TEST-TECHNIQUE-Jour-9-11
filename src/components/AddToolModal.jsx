@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import XMarkIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { ThemeContext } from "../context/ThemeContext";
 import { createTool } from "../api/ToolsApi";
+import { toast } from "react-toastify";
 
 const AddToolModal = ({ isOpen, onClose }) => {
   const { theme } = useContext(ThemeContext);
@@ -41,7 +42,7 @@ const AddToolModal = ({ isOpen, onClose }) => {
       });
       onClose();
     } catch (error) {
-      console.error("Error creating tool:", error);
+      toast.error("Error creating tool:", error.message);
     }
   };
 

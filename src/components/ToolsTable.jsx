@@ -9,6 +9,7 @@ import AddToolModal from "./AddToolModal";
 import ConfirmationModal from "./ConfirmationModal";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import FilterDropdown from "./FilterDropdown";
+import { toast } from "react-toastify";
 
 const ToolsTable = ({ tools, withClickableDetails = false }) => {
   const { theme } = useContext(ThemeContext);
@@ -117,7 +118,7 @@ const ToolsTable = ({ tools, withClickableDetails = false }) => {
       setDeleteConfirmModalOpen(false);
       setToolToDelete(null);
     } catch (error) {
-      console.error("Error deleting tool:", error);
+      toast.error("Error deleting tool:", error.message);
     }
   };
 
